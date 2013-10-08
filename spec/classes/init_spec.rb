@@ -24,6 +24,7 @@ describe 'zfsautosnap', :type => 'class' do
 
     it do
       should contain_package('ksh').with_provider('pkgutil')
+      should contain_package('mbuffer').with_provider('pkgutil')
 
       should contain_file('/usr/bin/ksh93').with( {
         :target => '/opt/csw/bin/ksh'

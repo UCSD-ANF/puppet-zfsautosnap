@@ -10,6 +10,11 @@ class zfsautosnap {
     ensure   => 'installed',
   }
 
+  package { 'mbuffer':
+    provider => 'pkgutil',
+    ensure   => 'installed',
+  }
+
   file { '/usr/bin/ksh93':
     ensure  => 'link',
     target  => '/opt/csw/bin/ksh',
