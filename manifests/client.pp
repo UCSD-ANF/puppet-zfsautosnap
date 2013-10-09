@@ -8,6 +8,7 @@ class zfsautosnap::client (
   include zfsautosnap
 
   $client_username = 'zfssnap' # Created by the package installation
+  $client_groupname = 'other'  # Specified by package
   $client_homedir = "/export/home/${client_username}"
 
   $basefmri = 'svc:/system/filesystem/zfs/auto-snapshot'
@@ -21,6 +22,7 @@ class zfsautosnap::client (
     source => $client_ssh_privkey_source,
     path   => "${client_homedir}/.ssh/${client_ssh_privkey_name}",
     owner  => $client_username,
+    group  => $client_groupname,
     mode   => '0700',
   }
 
