@@ -51,27 +51,27 @@ class zfsautosnap::client (
   }
 
   service { "${basefmri}:daily" :
-    ensure  => 'enabled',
+    enable  => true,
     require => Package['IGPPzfsbackup'],
   }
   service { "${basefmri}:hourly" :
-    ensure  => 'enabled',
+    enable  => true,
     require => Package['IGPPzfsbackup'],
   }
   service { "${basefmri}:monthly" :
-    ensure  => 'disabled',
+    enable  => false,
     require => Package['IGPPzfsbackup'],
   }
   service { "${basefmri}:weekly" :
-    ensure  => 'disabled',
+    enable  => false,
     require => Package['IGPPzfsbackup'],
   }
   service { "${basefmri}:frequent" :
-    ensure  => 'disabled',
+    enable  => false,
     require => Package['IGPPzfsbackup'],
   }
   service { "${basefmri}:event" :
-    ensure  => 'disabled',
+    enable  => false,
     require => Package['IGPPzfsbackup'],
   }
 
