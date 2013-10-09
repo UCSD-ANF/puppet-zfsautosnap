@@ -12,9 +12,8 @@ class zfsautosnap::client (
 
   $basefmri = 'svc:/system/filesystem/zfs/auto-snapshot'
 
-  package { 'IGPPzfsbackup':
+  package { 'IGPPzfsautosnap':
     ensure   => 'installed',
-    provider => 'sun',
     require  => Package['mbuffer'],
   } ->
   file { 'zfsbackups client ssh privkey':
