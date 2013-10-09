@@ -28,53 +28,53 @@ class zfsautosnap::client (
     fmri     => "${basefmri}:daily",
     property => 'zfs/backup',
     value    => 'incremental_mbuffered',
-    require  => Package['IGPPzfsbackup'],
+    require  => Package['IGPPzfsautosnap'],
   }
 
   svcprop { 'zfssnap daily host':
     fmri     => "${basefmri}:daily",
     property => 'zfs/backup-host',
     value    => $target_hostname,
-    require  => Package['IGPPzfsbackup'],
+    require  => Package['IGPPzfsautosnap'],
   }
 
   svcprop { 'zfssnap daily zpool':
     fmri     => "${basefmri}:daily",
     property => 'zfs/backup-zpool',
     value    => $target_pool,
-    require  => Package['IGPPzfsbackup'],
+    require  => Package['IGPPzfsautosnap'],
   }
 
   svcprop { 'zfssnap daily user':
     fmri     => "${basefmri}:daily",
     property => 'zfs/backup-user',
     value    => $target_username,
-    require  => Package['IGPPzfsbackup'],
+    require  => Package['IGPPzfsautosnap'],
   }
 
   service { "${basefmri}:daily" :
     enable  => true,
-    require => Package['IGPPzfsbackup'],
+    require => Package['IGPPzfsautosnap'],
   }
   service { "${basefmri}:hourly" :
     enable  => true,
-    require => Package['IGPPzfsbackup'],
+    require => Package['IGPPzfsautosnap'],
   }
   service { "${basefmri}:monthly" :
     enable  => false,
-    require => Package['IGPPzfsbackup'],
+    require => Package['IGPPzfsautosnap'],
   }
   service { "${basefmri}:weekly" :
     enable  => false,
-    require => Package['IGPPzfsbackup'],
+    require => Package['IGPPzfsautosnap'],
   }
   service { "${basefmri}:frequent" :
     enable  => false,
-    require => Package['IGPPzfsbackup'],
+    require => Package['IGPPzfsautosnap'],
   }
   service { "${basefmri}:event" :
     enable  => false,
-    require => Package['IGPPzfsbackup'],
+    require => Package['IGPPzfsautosnap'],
   }
 
 }
