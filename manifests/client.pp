@@ -13,13 +13,16 @@ class zfsautosnap::client (
   $basefmri = 'svc:/system/filesystem/zfs/auto-snapshot'
 
   package { 'IGPPzfsbackup':
-    ensure  => 'installed',
-    require => Package['mbuffer'],
+    ensure   => 'installed',
+    provider => 'sun',
+    require  => Package['mbuffer'],
   } ->
   file { 'zfsbackups client ssh privkey':
     ensure => 'file',
     source => $client_ssh_privkey_source,
     path   => "${client_homedir}/.ssh/${client_ssh_privkey_name}",
+    owner  => $client_username,
+    mode   => '0700',
   }
 
   svcprop { 'zfssnap daily type':
