@@ -17,6 +17,20 @@ class zfsautosnap::client (
     ensure   => 'installed',
     require  => Package['mbuffer'],
   } ->
+  user { $client_username :
+    uid      => '51',
+    comment  => 'ZFS Automatic Snapshots role'
+    group    => 'other',
+    shell    => '/bin/pfsh',
+    home     => $client_homedir,
+    password => 'NP',
+  } ->
+  file { $client_homedir :
+    ensure => 'directory',
+    owner  => $client_username,
+    group  => $client_groupname,
+    mode   => '0755',
+  } ->
   file { 'zfsbackups client ssh privkey':
     ensure => 'file',
     source => $client_ssh_privkey_source,
