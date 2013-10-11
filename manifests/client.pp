@@ -20,7 +20,7 @@ class zfsautosnap::client (
   user { $client_username :
     uid      => '51',
     comment  => 'ZFS Automatic Snapshots role',
-    groups    => ['other',],
+    gid      => 'other',
     shell    => '/bin/pfsh',
     home     => $client_homedir,
     password => 'NP',
