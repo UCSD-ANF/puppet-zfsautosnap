@@ -18,6 +18,7 @@ class zfsautosnap::client (
     require  => Package['mbuffer'],
   } ->
   user { $client_username :
+    ensure   => 'role',
     uid      => '51',
     comment  => 'ZFS Automatic Snapshots role',
     gid      => 'other',
