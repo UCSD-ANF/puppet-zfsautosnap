@@ -32,6 +32,12 @@ class zfsautosnap::client (
     group  => $client_groupname,
     mode   => '0755',
   } ->
+  file { "${client_homedir}/.ssh" :
+    ensure => 'directory',
+    owner  => $client_username,
+    group  => $client_groupname,
+    mode   => '0755',
+  } ->
   file { 'zfsbackups client ssh privkey':
     ensure => 'file',
     source => $client_ssh_privkey_source,
