@@ -1,8 +1,12 @@
-class zfsautosnap {
+class zfsautosnap(
+  $recipient = 'root',
+) {
+  include stdlib
+
   # validate OS
-  if $::osfamily != 'Solaris' {
-    fail("Unsupported OSFamily $::osfamily")
-  }
+  validate_re($::osfamily, '^Solaris$')
+
+  mailalias { 'zfssnap': recipient => $recipient }
 
   # install ksh package from CSW and symlink it to /usr/bin/ksh93
   package { 'ksh':
