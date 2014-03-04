@@ -47,6 +47,22 @@ class zfsautosnap::client (
     mode   => '0700',
   }
 
+  file { '/usr/local/sbin/checkzfssnaplock':
+    ensure => 'present',
+    source => 'puppet:///zfsautosnap/checkzfssnaplock',
+    owner  => 'root',
+    group  => 'sys',
+    mode   => '0755',
+  }
+
+  file { '/usr/local/sbin/clearzfssnaplock':
+    ensure => 'present',
+    source => 'puppet:///zfsautosnap/clearzfssnaplock',
+    owner  => 'root',
+    group  => 'sys',
+    mode   => '0755',
+  }
+
   svcprop { 'zfssnap daily type':
     fmri     => "${basefmri}:daily",
     property => 'zfs/backup',

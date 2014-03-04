@@ -4,7 +4,7 @@ class zfsautosnap(
   include stdlib
 
   # validate OS
-  validate_re($::osfamily, '^Solaris$')
+  validate_re($::osfamily, '^Solaris$', "Unsupported OSFamily ${::osfamily}")
 
   mailalias { 'zfssnap': recipient => $recipient }
 
@@ -24,4 +24,5 @@ class zfsautosnap(
     target  => '/opt/csw/bin/ksh',
     require => Package['ksh'],
   }
+
 }

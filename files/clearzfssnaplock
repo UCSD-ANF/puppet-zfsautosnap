@@ -1,0 +1,4 @@
+#!/bin/bash
+
+/usr/sbin/svccfg -v -s zfs/auto-snapshot:daily setprop zfs/backup-lock = astring: "unlocked"
+/usr/sbin/svcadm refresh zfs/auto-snapshot:daily

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Script that checks the current status of the daily backup job
+
+# Exit codes
+ERR_UNLOCKED=0 # aka "Success"
+ERR_PROC_RUNNING=1
+ERR_PROC_DEAD=2
+
+# FMRI of the service we're checking
+SvcFmri="svc:/system/filesystem/zfs/auto-snapshot:daily"
+
+# Output from svccfg looks like this
+# zfs/backup-lock  astring  "incremental_mbuffered backup in progress by PID 23310"
+status=$(/usr/sbin/svccfg -s $SvcFmri listprop zfs/backup-lock)
+status=$(echo "$status" | sed -e 's/zfs\/backup-lock  astring  //' -e 's/\"//g')
+#echo $status
+
+if echo $status | grep unlocked > /dev/null; then
+    echo "Unlocked"
+    exit $ERR_UNLOCKED
+else
+    backup_type=$(echo $status | awk '{print $1}')
+    lockpid=$(echo $status | awk '{print $7}')
+    echo Lock held by PID $lockpid running backup type $backup_type
+    ps -p $lockpid > /dev/null
+    err=$?
+    if [[ $err != 0 ]]; then
+        echo Process $lockpid is dead.
+        exit $ERR_PROC_DEAD
+    else
+        echo Process $lockpid is currently running.
+        ptree $lockpid
+        exit $ERR_PROC_RUNNING
+    fi
+fi

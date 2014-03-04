@@ -10,7 +10,7 @@ describe 'zfsautosnap', :type => 'class' do
     end
 
     it {
-      expect { should raise_error(Puppet::Error) }
+      expect { should raise_error(Puppet::Error, /Unsupported OSFamily/) }
     }
   end
 

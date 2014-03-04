@@ -17,10 +17,10 @@ describe 'zfsautosnap::client', :type => 'class' do
         :client_ssh_privkey_source => 'puppet:///site/id_dsa',
       }}
 
-      it {
-        should contain_file('zfsbackups client ssh privkey')
-        should contain_package('IGPPzfsbackup')
-      }
+      it { should contain_file('zfsbackups client ssh privkey') }
+      it { should contain_package('IGPPzfsautosnap') }
+      it { should contain_file('/usr/local/sbin/checkzfssnaplock') }
+      it { should contain_file('/usr/local/sbin/clearzfssnaplock') }
 
     end
   end
