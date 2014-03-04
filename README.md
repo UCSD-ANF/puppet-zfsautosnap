@@ -1,5 +1,5 @@
 Introduction
-------------
+============
 
 This is a puppet module to manage an in-house maintained version of the
 SUNWzfs-auto-snap package that was originally written for OpenSolaris.
@@ -11,3 +11,12 @@ The module currently only handles the CSW dependencies for the package.
 It does not handle installing the actual package, nor does it enable
 the services. That functionality is still being handled by our CFengine
 installation.
+
+Requirements
+============
+
+The client module requires that File['/usr/local/sbin'] exists in the catalog.
+
+Modules required:
+ * puppetlabs-stdlib 2.6.0 or later
+ * ppbrown-svcprop 1.0.0 or later
