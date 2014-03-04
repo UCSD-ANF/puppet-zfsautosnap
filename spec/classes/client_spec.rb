@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe 'zfsautosnap::client', :type => 'class' do
+  let(:pre_conditions) {
+    "file {'/usr/local/sbin': ensure => 'directory'}"
+  }
   context 'on Solaris' do
     let(:facts) {{
       :osfamily => 'Solaris',

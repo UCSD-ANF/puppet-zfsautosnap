@@ -48,11 +48,12 @@ class zfsautosnap::client (
   }
 
   file { '/usr/local/sbin/checkzfssnaplock':
-    ensure => 'present',
-    source => 'puppet:///zfsautosnap/checkzfssnaplock',
-    owner  => 'root',
-    group  => 'sys',
-    mode   => '0755',
+    ensure  => 'present',
+    source  => 'puppet:///zfsautosnap/checkzfssnaplock',
+    owner   => 'root',
+    group   => 'sys',
+    mode    => '0755',
+    require => File['/usr/local/sbin'],
   }
 
   file { '/usr/local/sbin/clearzfssnaplock':
@@ -61,6 +62,7 @@ class zfsautosnap::client (
     owner  => 'root',
     group  => 'sys',
     mode   => '0755',
+    require => File['/usr/local/sbin'],
   }
 
   svcprop { 'zfssnap daily type':
