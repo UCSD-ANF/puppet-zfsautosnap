@@ -48,5 +48,4 @@ esac
 
 [ -e /usr/sbin/svccfg ] || ( echo "Can't find svccfg" 1>&2; exit $ERR_GENERAL )
 
-# FMRI of the service we're checking
 check_backup_lock $SvcFmri
