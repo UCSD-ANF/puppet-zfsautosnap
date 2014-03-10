@@ -1,4 +1,20 @@
 #!/bin/bash
 
-/usr/sbin/svccfg -v -s zfs/auto-snapshot:daily setprop zfs/backup-lock = astring: "unlocked"
-/usr/sbin/svcadm refresh zfs/auto-snapshot:daily
+FMRI_DAILY="svc:/system/filesystem/zfs/auto-snapshot:daily"
+FMRI_HOURLY="svc:/system/filesystem/zfs/auto-snapshot:hourly"
+
+function clear_lock {
+    local $fmri=$1
+    /usr/sbin/svccfg -v -s $fmri setprop zfs/backup-lock = astring: "unlocked"
+    /usr/sbin/svcadm refresh $fmri
+}
+
+case $1 in
+    daily|"") SvcFmri=$FMRI_DAILY;;
+    hourly) SvcFmri=$FMRI_HOURLY;;
+    *) echo "Usage: $0 daily|hourly" 1>&2; exit $ERR_GENERAL;;
+esac
+
+[ -e /usr/sbin/svccfg ] || ( echo "Can't find svccfg" 1>&2; exit $ERR_GENERAL )
+
+clear_lock $SvcFmri
