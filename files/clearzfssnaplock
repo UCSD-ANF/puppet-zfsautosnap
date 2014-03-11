@@ -4,7 +4,7 @@ FMRI_DAILY="svc:/system/filesystem/zfs/auto-snapshot:daily"
 FMRI_HOURLY="svc:/system/filesystem/zfs/auto-snapshot:hourly"
 
 function clear_lock {
-    local $fmri=$1
+    local fmri=$1
     /usr/sbin/svccfg -v -s $fmri setprop zfs/backup-lock = astring: "unlocked"
     /usr/sbin/svcadm refresh $fmri
 }
