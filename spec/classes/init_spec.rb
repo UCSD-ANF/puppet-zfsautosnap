@@ -14,23 +14,37 @@ describe 'zfsautosnap', :type => 'class' do
     }
   end
 
-  context "on Solaris" do
+  context "on Solaris 5.10" do
     let :facts do
       {
-        :osfamily => 'Solaris',
-        :operatingsystem => 'Solaris',
+        :osfamily               => 'Solaris',
+        :operatingsystem        => 'Solaris',
+        :operatingsystemrelease => '5.10',
       }
     end
 
-    it do
-      should contain_package('ksh').with_provider('pkgutil')
-      should contain_package('mbuffer').with_provider('pkgutil')
+    it { should contain_package('ksh').with_provider('pkgutil') }
+    it { should contain_package('mbuffer').with_provider('pkgutil') }
 
-      should contain_file('/usr/bin/ksh93').with( {
-        :target => '/opt/csw/bin/ksh'
-      } )
+    it { should contain_file('/usr/bin/ksh93').with( {
+      :target => '/opt/csw/bin/ksh'
+    } ) }
+
+  end
+
+  context "on Solaris 5.11" do
+    let :facts do
+      {
+        :osfamily               => 'Solaris',
+        :operatingsystem        => 'Solaris',
+        :operatingsystemrelease => '5.11',
+      }
     end
 
+    it { should_not contain_package('ksh').with_provider('pkgutil') }
+    it { should contain_package('mbuffer').with_provider('pkgutil') }
+
+    it { should_not contain_file('/usr/bin/ksh93') }
   end
 
 end
