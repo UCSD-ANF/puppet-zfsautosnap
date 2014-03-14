@@ -3,7 +3,9 @@ class zfsautosnap::client (
   $client_ssh_privkey_source,
   $client_ssh_privkey_name='id_dsa',
   $target_username='zfsbackup',
-  $target_pool = 'zfsbackups'
+  $target_pool = 'zfsbackups',
+  $verbose_daily = false,
+  $verbose_hourly = false,
 ) {
   include zfsautosnap
 
@@ -96,10 +98,20 @@ class zfsautosnap::client (
   service { "${basefmri}:daily" :
     enable  => true,
     require => Package['IGPPzfsautosnap'],
+  } ->
+  svcprop { 'zfssnap daily verbose':
+    fmri     => "${basefmri}:daily",
+    property => 'zfs/verbose',
+    value    => $verbose_daily,
   }
   service { "${basefmri}:hourly" :
     enable  => true,
     require => Package['IGPPzfsautosnap'],
+  } ->
+  svcprop { 'zfssnap hourly verbose':
+    fmri     => "${basefmri}:hourly",
+    property => 'zfs/verbose',
+    value    => $verbose_hourly,
   }
   service { "${basefmri}:monthly" :
     enable  => false,
