@@ -61,5 +61,46 @@ describe 'zfsautosnap::client', :type => 'class' do
         :value    => true,
       }) }
     end
+
+    context 'with verbose params = "invalid"' do
+      let(:params) {{
+        :target_hostname           => 'receiver.example.priv',
+        :client_ssh_privkey_source => 'puppet:///site/id_dsa',
+        :verbose_hourly            => 'invalid',
+        :verbose_daily             => 'invalid',
+      }}
+
+      it 'should complain about non-boolean params' do
+        expect { should raise_error(Puppet::Error) }
+      end
+    end
+
+    context 'with enable params = "invalid"' do
+      let(:params) {{
+        :target_hostname           => 'receiver.example.priv',
+        :client_ssh_privkey_source => 'puppet:///site/id_dsa',
+        :enable_hourly            => 'invalid',
+        :enable_daily             => 'invalid',
+      }}
+
+      it 'should complain about non-boolean params' do
+        expect { should raise_error(Puppet::Error) }
+      end
+    end
+
+    context 'with enable params = false' do
+      let(:params) {{
+        :target_hostname           => 'receiver.example.priv',
+        :client_ssh_privkey_source => 'puppet:///site/id_dsa',
+        :enable_hourly             => false,
+        :enable_daily              => false,
+      }}
+      it { should contain_service("#{basefmri}:hourly").with_enable(false) }
+      it { should contain_service("#{basefmri}:daily").with_enable(false) }
+      it { should contain_service("#{basefmri}:monthly").with_enable(false) }
+      it { should contain_service("#{basefmri}:weekly").with_enable(false) }
+      it { should contain_service("#{basefmri}:frequent").with_enable(false) }
+      it { should contain_service("#{basefmri}:event").with_enable(false) }
+    end
   end
 end

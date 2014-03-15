@@ -6,7 +6,13 @@ class zfsautosnap::client (
   $target_pool = 'zfsbackups',
   $verbose_daily = false,
   $verbose_hourly = false,
+  $enable_hourly = true,
+  $enable_daily = true
 ) {
+  validate_bool($enable_daily)
+  validate_bool($verbose_daily)
+  validate_bool($enable_hourly)
+  validate_bool($verbose_hourly)
   include zfsautosnap
 
   $client_username = 'zfssnap' # Created by the package installation
@@ -96,7 +102,7 @@ class zfsautosnap::client (
   }
 
   service { "${basefmri}:daily" :
-    enable  => true,
+    enable  => $enable_daily,
     require => Package['IGPPzfsautosnap'],
   } ->
   svcprop { 'zfssnap daily verbose':
@@ -105,7 +111,7 @@ class zfsautosnap::client (
     value    => $verbose_daily,
   }
   service { "${basefmri}:hourly" :
-    enable  => true,
+    enable  => $enable_hourly,
     require => Package['IGPPzfsautosnap'],
   } ->
   svcprop { 'zfssnap hourly verbose':
