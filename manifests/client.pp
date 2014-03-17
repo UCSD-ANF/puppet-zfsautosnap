@@ -108,7 +108,7 @@ class zfsautosnap::client (
   svcprop { 'zfssnap daily verbose':
     fmri     => "${basefmri}:daily",
     property => 'zfs/verbose',
-    value    => $verbose_daily,
+    value    => bool2num($verbose_daily),
   }
   service { "${basefmri}:hourly" :
     enable  => $enable_hourly,
@@ -117,7 +117,7 @@ class zfsautosnap::client (
   svcprop { 'zfssnap hourly verbose':
     fmri     => "${basefmri}:hourly",
     property => 'zfs/verbose',
-    value    => $verbose_hourly,
+    value    => bool2num($verbose_hourly),
   }
   service { "${basefmri}:monthly" :
     enable  => false,
