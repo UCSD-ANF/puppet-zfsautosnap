@@ -34,12 +34,12 @@ describe 'zfsautosnap::client', :type => 'class' do
       it { should contain_svcprop("zfssnap hourly verbose").with({
         :fmri     => "#{basefmri}:hourly",
         :property => 'zfs/verbose',
-        :value    => false,
+        :value    => 'false',
       }) }
       it { should contain_svcprop("zfssnap daily verbose").with({
         :fmri     => "#{basefmri}:daily",
         :property => 'zfs/verbose',
-        :value    => false,
+        :value    => 'false',
       }) }
     end
 
@@ -53,12 +53,12 @@ describe 'zfsautosnap::client', :type => 'class' do
       it { should contain_svcprop("zfssnap hourly verbose").with({
         :fmri     => "#{basefmri}:hourly",
         :property => 'zfs/verbose',
-        :value    => true,
+        :value    => 'true',
       }) }
       it { should contain_svcprop("zfssnap daily verbose").with({
         :fmri     => "#{basefmri}:daily",
         :property => 'zfs/verbose',
-        :value    => true,
+        :value    => 'true',
       }) }
     end
 

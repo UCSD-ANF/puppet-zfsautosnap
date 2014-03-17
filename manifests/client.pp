@@ -9,18 +9,32 @@ class zfsautosnap::client (
   $enable_hourly = true,
   $enable_daily = true
 ) {
+  ## Parameter validation
   validate_bool($enable_daily)
   validate_bool($verbose_daily)
   validate_bool($enable_hourly)
   validate_bool($verbose_hourly)
+
   include zfsautosnap
 
+  ## Internal variables
   $client_username = 'zfssnap' # Created by the package installation
   $client_groupname = 'other'  # Specified by package
   $client_homedir = "/export/home/${client_username}"
 
   $basefmri = 'svc:/system/filesystem/zfs/auto-snapshot'
 
+  $verbose_daily_real = $verbose_daily ? {
+    true  => 'true',
+    false => 'false',
+  }
+
+  $verbose_hourly_real = $verbose_hourly ? {
+    true  => 'true',
+    false => 'false',
+  }
+
+  ## Managed resources
   package { 'IGPPzfsautosnap':
     ensure   => 'installed',
     require  => Package['mbuffer'],
@@ -108,7 +122,7 @@ class zfsautosnap::client (
   svcprop { 'zfssnap daily verbose':
     fmri     => "${basefmri}:daily",
     property => 'zfs/verbose',
-    value    => bool2num($verbose_daily),
+    value    => $verbose_daily_real,
   }
   service { "${basefmri}:hourly" :
     enable  => $enable_hourly,
@@ -117,7 +131,7 @@ class zfsautosnap::client (
   svcprop { 'zfssnap hourly verbose':
     fmri     => "${basefmri}:hourly",
     property => 'zfs/verbose',
-    value    => bool2num($verbose_hourly),
+    value    => $verbose_hourly_real,
   }
   service { "${basefmri}:monthly" :
     enable  => false,
