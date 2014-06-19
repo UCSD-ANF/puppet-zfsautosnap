@@ -24,7 +24,7 @@ class zfsautosnap(
     file { '/usr/bin/ksh93':
       ensure  => 'link',
       target  => '/opt/csw/bin/ksh',
-      require => Package['ksh'],
+      #require => Package['ksh'],
     }
   }
 }
