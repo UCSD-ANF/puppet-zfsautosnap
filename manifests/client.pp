@@ -87,6 +87,21 @@ class zfsautosnap::client (
     require => File['/usr/local/sbin'],
   }
 
+  file { '/usr/local/sbin/snaphourlykiller':
+    ensure  => 'present',
+    source  => 'puppet:///modules/zfsautosnap/snaphourlykiller',
+    owner   => 'root',
+    group   => 'sys',
+    mode    => '0755',
+    require => File['/usr/local/sbin'],
+  } ->
+  cron {'snaphourlykiller':
+    ensure  => 'present',
+    command => '/usr/local/sbin/snaphourlykiller',
+    user    => 'root',
+    minute  => 15,
+  }
+
   svcprop { 'zfssnap daily type':
     fmri     => "${basefmri}:daily",
     property => 'zfs/backup',

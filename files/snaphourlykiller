@@ -1,0 +1,11 @@
+#!/bin/bash
+
+export PATH=/usr/local/sbin:/usr/sbin:/usr/local/bin:/usr/bin
+
+for pid in $(pgrep -f zfs-auto-snapshot); do
+    if pargs $pid | grep auto-snapshot:hourly > /dev/null ; then
+        echo Killing stale hourly snapshot process: $pid
+        ptree $pid
+        kill $pid
+    fi
+done
