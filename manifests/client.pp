@@ -87,6 +87,18 @@ class zfsautosnap::client (
     require => File['/usr/local/sbin'],
   }
 
+  cron {'zfsautosnap daily lock checker':
+    ensure  => 'present',
+    user    => 'root',
+    minute  => 45,
+    hour    => 23,
+    command => '/usr/local/sbin/checkzfssnaplock > /dev/null; [ $? == 2 ] && /usr/local/sbin/clearzfssnaplock',
+    require => [
+      File['/usr/local/sbin/checkzfssnaplock'],
+      File['/usr/local/sbin/clearzfssnaplock']
+    ],
+  }
+
   file { '/usr/local/sbin/snaphourlykiller':
     ensure  => 'present',
     source  => 'puppet:///modules/zfsautosnap/snaphourlykiller',
