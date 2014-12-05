@@ -92,7 +92,7 @@ class zfsautosnap::client (
     user    => 'root',
     minute  => 45,
     hour    => 23,
-    command => '/usr/local/sbin/checkzfssnaplock > /dev/null; [ $? == 2 ] && /usr/local/sbin/clearzfssnaplock',
+    command => '/usr/local/sbin/checkzfssnaplock > /dev/null; [[ $? == 2 ]] && /usr/local/sbin/clearzfssnaplock',
     require => [
       File['/usr/local/sbin/checkzfssnaplock'],
       File['/usr/local/sbin/clearzfssnaplock']
