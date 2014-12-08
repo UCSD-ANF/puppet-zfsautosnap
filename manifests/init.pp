@@ -9,7 +9,7 @@ class zfsautosnap(
 
   $provider = $::osfamily ? {
     'RedHat'  => undef,
-    'Solaris' => $::operatingsystemrelease ? {
+    'Solaris' => $::kernelrelease ? {
       '5.10'  => 'pkgutil',
       default => undef,
     },
@@ -25,7 +25,7 @@ class zfsautosnap(
     package { $paramiko_name: ensure => 'installed', provider => $provider }
   }
 
-  if $::operatingsystemrelease == '5.10' {
+  if $::kernelrelease == '5.10' {
     # install ksh package from CSW and symlink it to /usr/bin/ksh93
     # ... if OpenCSW supported it.
     #package { 'ksh':

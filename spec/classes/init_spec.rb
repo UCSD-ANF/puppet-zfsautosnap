@@ -17,9 +17,9 @@ describe 'zfsautosnap', :type => 'class' do
   context "on Solaris 5.10" do
     let :facts do
       {
-        :osfamily               => 'Solaris',
-        :operatingsystem        => 'Solaris',
-        :operatingsystemrelease => '5.10',
+        :osfamily        => 'Solaris',
+        :operatingsystem => 'Solaris',
+        :kernelrelease   => '5.10',
       }
     end
 
@@ -36,9 +36,9 @@ describe 'zfsautosnap', :type => 'class' do
   context "on Solaris 5.11" do
     let :facts do
       {
-        :osfamily               => 'Solaris',
-        :operatingsystem        => 'Solaris',
-        :operatingsystemrelease => '5.11',
+        :osfamily        => 'Solaris',
+        :operatingsystem => 'Solaris',
+        :kernelrelease   => '5.11',
       }
     end
 
