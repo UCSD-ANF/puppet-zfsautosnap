@@ -1,3 +1,4 @@
+# Set up a ZFS autosnap client
 class zfsautosnap::client (
   $target_hostname,
   $client_ssh_privkey_source,
@@ -15,7 +16,7 @@ class zfsautosnap::client (
   validate_bool($enable_hourly)
   validate_bool($verbose_hourly)
 
-  include zfsautosnap
+  require zfsautosnap
 
   ## Internal variables
   $client_username = 'zfssnap' # Created by the package installation
@@ -36,8 +37,8 @@ class zfsautosnap::client (
 
   ## Managed resources
   package { 'IGPPzfsautosnap':
-    ensure   => 'installed',
-    require  => Package['mbuffer'],
+    ensure  => 'installed',
+    require => Package['mbuffer'],
   } ->
   user { $client_username :
     ensure   => 'role',
@@ -79,20 +80,23 @@ class zfsautosnap::client (
   }
 
   file { '/usr/local/sbin/clearzfssnaplock':
-    ensure => 'present',
-    source => 'puppet:///modules/zfsautosnap/clearzfssnaplock',
-    owner  => 'root',
-    group  => 'sys',
-    mode   => '0755',
+    ensure  => 'present',
+    source  => 'puppet:///modules/zfsautosnap/clearzfssnaplock',
+    owner   => 'root',
+    group   => 'sys',
+    mode    => '0755',
     require => File['/usr/local/sbin'],
   }
 
-  cron {'zfsautosnap daily lock checker':
+  cron { 'zfsautosnap daily lock checker':
     ensure  => 'present',
     user    => 'root',
     minute  => 45,
     hour    => 23,
-    command => '/usr/local/sbin/checkzfssnaplock > /dev/null; [[ $? == 2 ]] && /usr/local/sbin/clearzfssnaplock',
+    command => join([
+      '/usr/local/sbin/checkzfssnaplock > /dev/null',
+      '[ $? = 2 ] && /usr/local/sbin/clearzfssnaplock',
+    ],'; '),
     require => [
       File['/usr/local/sbin/checkzfssnaplock'],
       File['/usr/local/sbin/clearzfssnaplock']
@@ -107,7 +111,7 @@ class zfsautosnap::client (
     mode    => '0755',
     require => File['/usr/local/sbin'],
   } ->
-  cron {'snaphourlykiller':
+  cron { 'snaphourlykiller':
     ensure  => 'present',
     command => '/usr/local/sbin/snaphourlykiller',
     user    => 'root',

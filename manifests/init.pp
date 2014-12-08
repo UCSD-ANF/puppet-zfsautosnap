@@ -1,37 +1,42 @@
+# Bring zfsautosnap up-to-parity
 class zfsautosnap(
   $recipient = 'root',
 ) {
-  include stdlib
-
   # validate OS
   validate_re($::osfamily, '^Solaris$', "Unsupported OSFamily ${::osfamily}")
 
   mailalias { 'zfssnap': recipient => $recipient }
 
-  $paramiko_name = $::osfamily ? {
-    'Solaris' => 'py_paramiko',
-    'RedHat'  => 'python-paramiko',
+  $provider = $::osfamily ? {
+    'RedHat'  => undef,
+    'Solaris' => $::operatingsystemrelease ? {
+      '5.10'  => 'pkgutil',
+      default => undef,
+    },
   }
-  package { [
-    'mbuffer',
-    $paramiko_name,
-  ]:
-    provider => 'pkgutil',
-    ensure   => 'installed',
+  $paramiko_name = $::osfamily ? {
+    'RedHat'  => 'python-paramiko',
+    'Solaris' => 'py_paramiko',
+  }
+  if !defined(Package['mbuffer']) {
+    package { 'mbuffer': ensure => 'installed', provider => $provider }
+  }
+  if !defined(Package[$paramiko_name]) {
+    package { $paramiko_name: ensure => 'installed', provider => $provider }
   }
 
-  if $::operatingsystemrelease == "5.10" {
+  if $::operatingsystemrelease == '5.10' {
     # install ksh package from CSW and symlink it to /usr/bin/ksh93
     # ... if OpenCSW supported it.
     #package { 'ksh':
     #  provider => 'pkgutil',
     #  ensure   => 'installed',
+    #  before   => File['/usr/bin/ksh93'],
     #}
 
     file { '/usr/bin/ksh93':
-      ensure  => 'link',
-      target  => '/opt/csw/bin/ksh',
-      #require => Package['ksh'],
+      ensure => 'link',
+      target => '/opt/csw/bin/ksh',
     }
   }
 }

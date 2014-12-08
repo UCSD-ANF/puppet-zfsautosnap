@@ -15,7 +15,7 @@ class zfsautosnap::server (
 ) {
 
   # bring in common dependencies
-  include zfsautosnap
+  require zfsautosnap
 
   # Install client key
   ssh_authorized_key { 'zfsautosnap client key':

@@ -25,6 +25,7 @@ describe 'zfsautosnap', :type => 'class' do
 
     it { should_not contain_package('ksh').with_provider('pkgutil') }
     it { should contain_package('mbuffer').with_provider('pkgutil') }
+    it { should contain_package('py_paramiko').with_provider('pkgutil') }
 
     it { should contain_file('/usr/bin/ksh93').with( {
       :target => '/opt/csw/bin/ksh'
@@ -42,7 +43,8 @@ describe 'zfsautosnap', :type => 'class' do
     end
 
     it { should_not contain_package('ksh').with_provider('pkgutil') }
-    it { should contain_package('mbuffer').with_provider('pkgutil') }
+    it { should contain_package('mbuffer').with_provider(nil) }
+    it { should contain_package('py_paramiko').with_provider(nil) }
 
     it { should_not contain_file('/usr/bin/ksh93') }
   end
