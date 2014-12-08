@@ -8,19 +8,17 @@ class zfsautosnap(
 
   mailalias { 'zfssnap': recipient => $recipient }
 
-  # We use Paramiko to talk to our remote server
-  $paramiko = $::osfamily ? {
-    'Solaris' => 'py_paramiko',
-    'RedHat'  => 'python-paramiko', #future
-  }
-
-  package { [
-    'mbuffer',
-    $paramiko,
-  ]:
-    provider => 'pkgutil',
-    ensure   => 'installed',
-  }
+  $paramiko_name = $::osfamily ? {
+    'Solaris' => 'py_paramiko',
+    'RedHat'  => 'python-paramiko',
+  }
+  package { [
+    'mbuffer',
+    $paramiko_name,
+  ]:
+    provider => 'pkgutil',
+    ensure   => 'installed',
+  }
 
   if $::operatingsystemrelease == "5.10" {
     # install ksh package from CSW and symlink it to /usr/bin/ksh93
