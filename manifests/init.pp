@@ -5,7 +5,9 @@ class zfsautosnap(
   # validate OS
   validate_re($::osfamily, '^Solaris$', "Unsupported OSFamily ${::osfamily}")
 
-  mailalias { 'zfssnap': recipient => $recipient }
+  if ! defined(Mailalias['zfssnap']) {
+    mailalias { 'zfssnap': recipient => $recipient }
+  }
 
   $provider = $::osfamily ? {
     'RedHat'  => undef,
