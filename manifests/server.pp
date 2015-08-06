@@ -25,6 +25,6 @@ class zfsautosnap::server (
     require => User[$target_username],
   }
 
-  # Make sure target pool exists
-  zpool { $target_pool : }
+  # # Make sure target pool exists
+  # zpool { $target_pool : }
 }
