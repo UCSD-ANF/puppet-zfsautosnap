@@ -3,7 +3,7 @@ class zfsautosnap(
   $recipient = 'root',
 ) {
   # validate OS
-  validate_re($::osfamily, '^Solaris$', "Unsupported OSFamily ${::osfamily}")
+  validate_re($::osfamily, '^(Solaris|RedHat)$', "Unsupported OSFamily ${::osfamily}")
 
   if ! defined(Mailalias['zfssnap']) {
     mailalias { 'zfssnap': recipient => $recipient }
@@ -27,7 +27,7 @@ class zfsautosnap(
     package { $paramiko_name: ensure => 'installed', provider => $provider }
   }
 
-  if $::kernelrelease == '5.10' {
+  if $::osfamily == 'Solaris' and $::kernelrelease == '5.10' {
     # install ksh package from CSW and symlink it to /usr/bin/ksh93
     # ... if OpenCSW supported it.
     #package { 'ksh':
