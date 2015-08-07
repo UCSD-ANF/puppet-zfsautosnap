@@ -8,8 +8,8 @@
 #   snapshots. This module won't create the user or it's .ssh directory so
 #   you will have to have glue code somewhere to define the user resource.
 class zfsautosnap::server (
-  $client_ssh_pubkey,
-  $client_ssh_pubkey_type,
+  $client_ssh_pubkey=undef,
+  $client_ssh_pubkey_type=undef,
   $target_pool = 'zfsbackups',
   $target_username = 'zfsbackup',
   $target_user_homedir = '/var/zfsbackup',
@@ -49,14 +49,24 @@ class zfsautosnap::server (
     owner  => $target_username,
     group  => $target_username,
     mode   => 0755,
-  }->
-  # Install client key
-  ssh_authorized_key { 'zfsautosnap client key':
-    type    => $client_ssh_pubkey_type,
-    key     => $client_ssh_pubkey,
-    user    => $target_username,
-    require => User[$target_username],
   }
+  # Install client key
+  if ($client_ssh_pubkey_type and $client_ssh_pubkey) {
+    ssh_authorized_key { 'zfsautosnap client key':
+      type    => $client_ssh_pubkey_type,
+      key     => $client_ssh_pubkey,
+      user    => $target_username,
+      mode    => 0644,
+      require => File["$target_user_homedir/.ssh"],
+    }
+  }
+
+  file { '/etc/sudoers.d/15_zfsautosnap_target':
+    ensure  => 'file',
+    content => "${target_username} ALL = NOPASSWD: /sbin/zfs,/sbin/zpool
+",
+  }
+
 
   # # Make sure target pool exists
   # zpool { $target_pool : }

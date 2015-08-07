@@ -84,6 +84,11 @@ class zfsautosnap::client (
     mode   => '0700',
   }
 
+  file { '/etc/sudoers.d/15_zfsautosnap_client':
+    ensure  => 'file',
+    content => "${client_username} ALL = NOPASSWD: /sbin/zfs,/sbin/zpool
+",
+  }
   # file { '/usr/local/sbin/checkzfssnaplock':
   #   ensure  => 'present',
   #   source  => 'puppet:///modules/zfsautosnap/checkzfssnaplock',
