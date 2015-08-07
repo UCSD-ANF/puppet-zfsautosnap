@@ -20,12 +20,20 @@ class zfsautosnap::client (
 
   ## Internal variables
   $client_username = 'zfssnap' # Created by the package installation
-  $client_groupname = 'other'  # Specified by package
+  $client_groupname = $::osfamily ? {
+    'Solaris' => 'other',  # Specified by zfsautosnap package
+    default   => 'daemon',
+  }
   $client_homedir = "/export/home/${client_username}"
   $client_shell = $::osfamily ? {
     'Solaris' => '/bin/pfsh',
     'FreeBSD' => '/usr/local/bin/bash',
     default   => '/bin/bash',
+  }
+
+  $client_user_ensure = $::osfamily ? {
+    'Solaris' => 'role',
+    default   => 'present',
   }
 
   # # Used by the old Solaris package only
@@ -47,13 +55,13 @@ class zfsautosnap::client (
   #  require => Package['mbuffer'],
   #} ->
   user { $client_username :
-    ensure   => 'role',
+    ensure   => $client_user_ensure,
     uid      => '51',
     comment  => 'ZFS Automatic Snapshots role',
-    gid      => 'other',
+    gid      => $client_groupname,
     shell    => $client_shell,
     home     => $client_homedir,
-    password => 'NP',
+    password => '*NP*',
   } ->
   file { $client_homedir :
     ensure => 'directory',
